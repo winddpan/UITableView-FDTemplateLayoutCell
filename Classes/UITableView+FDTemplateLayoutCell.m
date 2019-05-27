@@ -100,11 +100,11 @@
         
         [cell.contentView addConstraint:widthFenceConstraint];
 
-        // Auto layout engine does its math
-        fittingHeight = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+        CGSize fittingSize = UILayoutFittingCompressedSize;
+        fittingSize.width = CGRectGetWidth(self.frame);
+        fittingSize = [cell systemLayoutSizeFittingSize:fittingSize withHorizontalFittingPriority:UILayoutPriorityRequired verticalFittingPriority:UILayoutPriorityFittingSizeLevel];
+        fittingHeight = fittingSize.height;
         
-        // Clean-ups
-        [cell.contentView removeConstraint:widthFenceConstraint];
         if (isSystemVersionEqualOrGreaterThen10_2) {
             [cell removeConstraints:edgeConstraints];
         }
@@ -158,7 +158,7 @@
         templateCell = [self dequeueReusableCellWithIdentifier:identifier];
         NSAssert(templateCell != nil, @"Cell must be registered to table view for identifier - %@", identifier);
         templateCell.fd_isTemplateLayoutCell = YES;
-        templateCell.contentView.translatesAutoresizingMaskIntoConstraints = NO;
+        //templateCell.contentView.translatesAutoresizingMaskIntoConstraints = NO;
         templateCellsByIdentifiers[identifier] = templateCell;
         [self fd_debugLog:[NSString stringWithFormat:@"layout cell created - %@", identifier]];
     }
